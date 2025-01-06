@@ -2,8 +2,8 @@ import React, { useEffect, useState } from "react";
 import "./Home.scss";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import { BiPlay } from "react-icons/bi";
-import { AiOutlinePlus } from "react-icons/ai";
+import { BiPlay } from "react-icons/bi"
+import { AiOutlinePlus } from "react-icons/ai"
 
 const apiKey = "350dbfc1290e2bd66f6d193ffc932a75";
 const url = "https://api.themoviedb.org/3";
@@ -13,28 +13,18 @@ const nowPlaying = "now_playing";
 const popular = "popular";
 const topRated = "top_rated";
 
-const Card = ({ img, title, overview }) => (
-  <div className="card">
-      <img src={img || "path/to/fallback/image.jpg"} alt="cover" /> {/* Fallback image */}
-      <h3>{title}</h3>
-      <p>{overview}</p>
-  </div>
-);
+const Card = ({ img }) => <img className="card" src={img} alt="cover" />;
 
 const Row = ({ title, arr = [] }) => (
-  <div className="row">
-      <h2>{title}</h2>
-      <div>
-          {arr.map((item, index) => (
-              <Card
-                  key={index}
-                  img={`${imgUrl}/${item.poster_path}`}
-                  title={item.original_title}
-                  overview={item.overview}
-              />
-          ))}
-      </div>
-  </div>
+    <div className="row">
+        <h2>{title}</h2>
+
+        <div>
+            {arr.map((item, index) => (
+                <Card key={index} img={`${imgUrl}/${item.poster_path}`} />
+            ))}
+        </div>
+    </div>
 );
 
 const Home = () => {
@@ -45,40 +35,30 @@ const Home = () => {
     const [genre, setGenre] = useState([]);
 
     useEffect(() => {
-        // Fetch movies by IDs from the array passed to the function
-        const fetchMovies = async (idList) => {
-            const movies = [];
-            for (let id of idList) {
-                try {
-                    const { data } = await axios.get(`${url}/movie/${id}?api_key=${apiKey}`);
-                    movies.push(data);
-                } catch (error) {
-                    console.error("Error fetching movie with ID", id, error);
-                }
-            }
-            return movies;
-        };
-
         const fetchUpcoming = async () => {
-            const movies = await fetchMovies([550, 551, 552, 553, 554, 555]); // Example movie IDs, adjust as needed
-            setUpcomingMovies(movies);
+            const {
+                data: { results },
+            } = await axios.get(`${url}/movie/${upcoming}?api_key=${apiKey}`);
+            setUpcomingMovies(results);
         };
-
         const fetchNowPlaying = async () => {
-            const movies = await fetchMovies([556, 557, 558, 559, 560]); // Example movie IDs, adjust as needed
-            setNowPlayingMovies(movies);
+            const {
+                data: { results },
+            } = await axios.get(`${url}/movie/${nowPlaying}?api_key=${apiKey}`);
+            setNowPlayingMovies(results);
         };
-
         const fetchPopular = async () => {
-            const movies = await fetchMovies([561, 562, 563, 564, 565]); // Example movie IDs, adjust as needed
-            setPopularMovies(movies);
+            const {
+                data: { results },
+            } = await axios.get(`${url}/movie/${popular}?api_key=${apiKey}`);
+            setPopularMovies(results);
         };
-
         const fetchTopRated = async () => {
-            const movies = await fetchMovies([566, 567, 568, 569, 570]); // Example movie IDs, adjust as needed
-            setTopRatedMovies(movies);
+            const {
+                data: { results },
+            } = await axios.get(`${url}/movie/${topRated}?api_key=${apiKey}`);
+            setTopRatedMovies(results);
         };
-
         const getAllGenre = async () => {
             const {
                 data: { genres },
@@ -109,7 +89,7 @@ const Home = () => {
                 {popularMovies[0] && <p>{popularMovies[0].overview}</p>}
 
                 <div>
-                    <button><BiPlay /> Play </button>
+                    <button><BiPlay /> Play  </button>
                     <button>My List <AiOutlinePlus /> </button>
                 </div>
             </div>
